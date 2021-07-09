@@ -11,7 +11,10 @@ function updateGoogleForm(){
     const answerSheetLastRow = answerSheet.getLastRow();
 
     let answers;
-    let choiceArray = [];
+    let choiceArray = [
+        "はい、参加します",
+        "いいえ、参加しません"
+    ];
 
     if (answerSheetLastRow > 1) {
         const questionNames = answerSheet.getRange(1, 1, 1, answerSheet.getLastColumn()).getValues();
@@ -28,18 +31,13 @@ function updateGoogleForm(){
         if (item.getTitle() === questionName) {
 
             //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
-            var choices = item.asMultipleChoiceItem().getChoices();
-
-            for (i = 0 ; i < choices.length ; i++ ){
-                choiceArray.push(choices[i].getValue());
-            }
+            //https://tonari-it.com/gas-form-checkbox/
 
             for (answer of answers) {
 
                 choiceArray.push(answer[0]);
             }
 
-            //https://tonari-it.com/gas-form-checkbox/
             item.asMultipleChoiceItem().setChoiceValues(choiceArray).showOtherOption(true);
         }
     });
