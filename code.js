@@ -19,26 +19,28 @@ function updateGoogleForm(){
         answers = answerSheet.getRange(2, colCount + 1, answerSheetLastRow - 1).getValues();    
     }
   
-    for (answer of answers) {
-
-        choiceArray.push(answer[0]);
-    }
-
-    console.log(choiceArray);
-
     const form = FormApp.getActiveForm();
     const items = form.getItems();
 
-    console.log(items);
 
     items.forEach(function(item){
 
-        console.log(item);
-        console.log(item.getTitle());
-            
         if (item.getTitle() === questionName) {
 
-            item.asMultipleChoiceItem().setChoiceValues(choiceArray);
+            //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
+            var choices = item.asMultipleChoiceItem().getChoices();
+
+            for (i = 0 ; i < choices.length ; i++ ){
+                choiceArray.push(choices[i].getValue());
+            }
+
+            for (answer of answers) {
+
+                choiceArray.push(answer[0]);
+            }
+
+            //https://tonari-it.com/gas-form-checkbox/
+            item.asMultipleChoiceItem().setChoiceValues(choiceArray).showOtherOption(true);
         }
     });
 }
