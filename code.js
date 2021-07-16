@@ -23,23 +23,35 @@ function updateGoogleForm(){
             let colCount = questionNames[0].indexOf(questionName);    
             answers = answerSheet.getRange(2, colCount + 1, answerSheetLastRow - 1).getValues();    
 
-            for (answer of answers) {
-
-                choiceArray.push(answer[0]);
-            }
-
             if (item.getType() ==  FormApp.ItemType.MULTIPLE_CHOICE) {
 
               console.log("multipleChoice");
 
+              let multipleChoiceItem = item.asMultipleChoiceItem();
+              let defaultItemsArray = multipleChoiceItem.getChoices();
+
+              console.log(defaultItemsArray);
+
+              choiceArray = makeChoiceList(defaultItemsArray, answers);
+              console.log(choiceArray);
+
+
                 //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
                 //https://tonari-it.com/gas-form-checkbox/
 
-                item.asMultipleChoiceItem().setChoiceValues(choiceArray).showOtherOption(true);
+                multipleChoiceItem.setChoiceValues(choiceArray).showOtherOption(true);
 
             } else if (item.getType() == FormApp.ItemType.CHECKBOX) {
 
               console.log("checkbox");
+
+              let checkboxItem = item.asCheckboxItem();
+              let defaultItemsArray = checkboxItem.getChoices();
+              console.log(defaultItemsArray[0].getValue());
+
+              choiceArray = makeChoiceList(defaultItemsArray, answers);
+
+              console.log(choiceArray);
 
                 // item.asCheckBoxItem().setChoiceValues(choiceArray).showOtherOption(true);
                 item.asCheckboxItem().setChoiceValues(choiceArray).showOtherOption(true);
@@ -56,4 +68,23 @@ function updateGoogleForm(){
 
         }
     });
+}
+
+function makeChoiceList(defaltItemsArray, answerListArray) {
+
+    let choiceArray = [];
+
+    for (i = 0; i < defaltItemsArray.length; i++) {
+        choiceArray.push(defaltItemsArray[i].getValue());
+    }
+
+    for (answerList of answerListArray) {
+
+        if (!(choiceArray.includes(answerList[0]))) {
+            choiceArray.push(answerList[0]);
+
+        }
+    }
+
+    return choiceArray;
 }
