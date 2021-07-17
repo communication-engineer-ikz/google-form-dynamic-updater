@@ -25,66 +25,43 @@ function updateGoogleForm(){
 
             if (item.getType() ==  FormApp.ItemType.MULTIPLE_CHOICE) {
 
-              console.log("multipleChoice");
+                let multipleChoiceItem = item.asMultipleChoiceItem();
+                let defaultItemsArray = multipleChoiceItem.getChoices();
 
-              let multipleChoiceItem = item.asMultipleChoiceItem();
-              let defaultItemsArray = multipleChoiceItem.getChoices();
-
-              console.log(defaultItemsArray);
-
-              choiceArray = makeChoiceList(defaultItemsArray, answers);
-              console.log(choiceArray);
-
+                choiceArray = makeChoiceList(defaultItemsArray, answers);
 
                 //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
-                //https://tonari-it.com/gas-form-checkbox/
-
                 multipleChoiceItem.setChoiceValues(choiceArray).showOtherOption(true);
 
             } else if (item.getType() == FormApp.ItemType.CHECKBOX) {
 
-              console.log("checkbox");
+                let checkboxItem = item.asCheckboxItem();
+                let defaultItemsArray = checkboxItem.getChoices();
 
-              let checkboxItem = item.asCheckboxItem();
-              let defaultItemsArray = checkboxItem.getChoices();
-              console.log(defaultItemsArray[0].getValue());
+                choiceArray = makeChoiceList(defaultItemsArray, answers);
 
-              choiceArray = makeChoiceList(defaultItemsArray, answers);
-
-              console.log(choiceArray);
-
-                // item.asCheckBoxItem().setChoiceValues(choiceArray).showOtherOption(true);
+                //https://tonari-it.com/gas-form-checkbox/
                 item.asCheckboxItem().setChoiceValues(choiceArray).showOtherOption(true);
-
             }
-
         }
     }
-  
-
-    items.forEach(function(item){
-
-        if (item.getTitle() === questionName) {
-
-        }
-    });
 }
 
 function makeChoiceList(defaltItemsArray, answerListArray) {
 
-    let choiceArray = [];
+    let choiceList = [];
 
     for (i = 0; i < defaltItemsArray.length; i++) {
-        choiceArray.push(defaltItemsArray[i].getValue());
+        choiceList.push(defaltItemsArray[i].getValue());
     }
 
     for (answerList of answerListArray) {
 
-        if (!(choiceArray.includes(answerList[0]))) {
-            choiceArray.push(answerList[0]);
+        if (!(choiceList.includes(answerList[0]))) {
+            choiceList.push(answerList[0]);
 
         }
     }
 
-    return choiceArray;
+    return choiceList;
 }
