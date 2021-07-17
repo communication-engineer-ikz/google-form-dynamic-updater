@@ -58,8 +58,8 @@ function makeChoiceList(defaltItemsArray, answerListArray) {
     for (answerList of answerListArray) {
 
         if ((!(choiceList.includes(answerList[0])))&&(answerList[0] != "")) {
-            choiceList.push(answerList[0]);
 
+            choiceList.push(answerList[0]);
         }
     }
 
