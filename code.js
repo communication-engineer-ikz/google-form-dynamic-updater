@@ -2,6 +2,10 @@
     * https://qiita.com/_xAGAx_/items/9bf13b020cb605908cf5
     * https://yukaobu.wordpress.com/2016/10/23/googleform-2/
 */
+const ignoreQuestionList = [
+    "無視する質問"
+];
+
 function updateGoogleForm(){
 
     const answerSheets = SpreadsheetApp.openById("1BhJ057fY31KjNQl5MGEPc5Nn2A3YN-dWg3IDNu1UK9g");
@@ -18,30 +22,33 @@ function updateGoogleForm(){
 
         for (item of items) {
 
-            choiceArray = [];
-            let questionName = item.getTitle();
-            let colCount = questionNames[0].indexOf(questionName);    
-            answers = answerSheet.getRange(2, colCount + 1, answerSheetLastRow - 1).getValues();    
+            if (!(ignoreQuestionList.includes(item.getTitle()))) {
 
-            if (item.getType() ==  FormApp.ItemType.MULTIPLE_CHOICE) {
+                choiceArray = [];
+                let questionName = item.getTitle();
+                let colCount = questionNames[0].indexOf(questionName);
+                answers = answerSheet.getRange(2, colCount + 1, answerSheetLastRow - 1).getValues();
 
-                let multipleChoiceItem = item.asMultipleChoiceItem();
-                let defaultItemsArray = multipleChoiceItem.getChoices();
+                if (item.getType() ==  FormApp.ItemType.MULTIPLE_CHOICE) {
 
-                choiceArray = makeChoiceList(defaultItemsArray, answers);
+                    let multipleChoiceItem = item.asMultipleChoiceItem();
+                    let defaultItemsArray = multipleChoiceItem.getChoices();
 
-                //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
-                multipleChoiceItem.setChoiceValues(choiceArray).showOtherOption(true);
+                    choiceArray = makeChoiceList(defaultItemsArray, answers);
 
-            } else if (item.getType() == FormApp.ItemType.CHECKBOX) {
+                    //https://tonari-it.com/gas-form-radio-button-multiple-choice-item/
+                    multipleChoiceItem.setChoiceValues(choiceArray).showOtherOption(true);
 
-                let checkboxItem = item.asCheckboxItem();
-                let defaultItemsArray = checkboxItem.getChoices();
+                } else if (item.getType() == FormApp.ItemType.CHECKBOX) {
 
-                choiceArray = makeChoiceList(defaultItemsArray, answers);
+                    let checkboxItem = item.asCheckboxItem();
+                    let defaultItemsArray = checkboxItem.getChoices();
 
-                //https://tonari-it.com/gas-form-checkbox/
-                item.asCheckboxItem().setChoiceValues(choiceArray).showOtherOption(true);
+                    choiceArray = makeChoiceList(defaultItemsArray, answers);
+
+                    //https://tonari-it.com/gas-form-checkbox/
+                    item.asCheckboxItem().setChoiceValues(choiceArray).showOtherOption(true);
+                }
             }
         }
     }
